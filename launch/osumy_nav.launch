@@ -1,0 +1,25 @@
+<launch>
+
+  <!--Motor control node-->
+  <node name="motor_control"  pkg="osumy_nav"  type="motor_control.py"> </node>
+ 
+
+  <!--Strart realsense and rokidar nodes-->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+  <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
+
+  <!--publish liser and base frames-->
+  <node pkg="tf" type="static_transform_publisher" name="cam_to_base_link" args="-0.16 0  -0.9 0 0 0 camera_link base_link 30" />
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.16 0  0.6 3.14 0 0  base_link laser 30" />
+  
+  <!--Control with Rviz node-->
+  <node pkg="osumy_nav" type="rviz_click_to_2d" name="rviz_click_to_2d"> </node> 
+  
+  <!--Start gmapping-->
+  <include file="$(find osumy_nav)/launch/gmapping.launch"/>
+
+  <!--Start movebase-->
+  <include file="$(find osumy_nav)/launch/move_base.launch"/>
+ 
+
+</launch>
